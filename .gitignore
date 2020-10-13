@@ -2,3 +2,6 @@
 !Makefile
 !*.c
 !.gitignore
+!resources
+!resources/*.c
+!*.h
