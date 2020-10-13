@@ -38,7 +38,8 @@
 
 #include "contiki.h"
 
-#if PLATFORM_HAS_LEDS
+#if 1
+// #if PLATFORM_HAS_LEDS
 
 #include <string.h>
 #include "contiki.h"
@@ -46,6 +47,13 @@
 #include "dev/leds.h"
 
 static void res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
+
+int red_state = 1;
+int green_state = 1;
+
+
+PROCESS(etimer_thread, "Etimer for led process");
+AUTOSTART_PROCESSES(&etimer_thread);
 
 /* A simple actuator example. Toggles the red led */
 RESOURCE(res_toggle,
@@ -58,6 +66,24 @@ RESOURCE(res_toggle,
 static void
 res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  leds_toggle(LEDS_RED);
+  red_state = ~red_state;
+}
+
+//Event timer thread
+PROCESS_THREAD(etimer_thread, ev, data) {
+  static struct etimer timer_etimer;
+
+  PROCESS_BEGIN();
+
+  while(1) {
+    etimer_set(&timer_etimer, 0.5*CLOCK_SECOND);
+    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
+    if (red_state)
+      leds_toggle(LEDS_RED);
+    if (green_state)
+      leds_toggle(LEDS_GREEN);
+  }
+
+  PROCESS_END();
 }
 #endif /* PLATFORM_HAS_LEDS */
