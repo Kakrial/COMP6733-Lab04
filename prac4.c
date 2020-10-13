@@ -249,10 +249,7 @@ static void event(struct tcp_socket *s, void *ptr, tcp_socket_event_t ev) {
 
 void setBuzzer(int freq) {
 	buz_freq = freq;
-	if (buz_state) {
-		buzzer_stop();
-		buzzer_start(buz_freq);
-	}
+	buzzer_start(buz_freq);
 }
 
 void callback(void *ptr) {
@@ -346,6 +343,7 @@ PROCESS_THREAD(etimer_thread, ev, data) {
   static struct etimer timer_etimer;
 
   PROCESS_BEGIN();
+  setBuzzer(1000);
 
   while(1) {
     etimer_set(&timer_etimer, CLOCK_SECOND);
