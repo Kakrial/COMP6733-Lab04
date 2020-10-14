@@ -90,8 +90,7 @@ extern resource_t res_temperature;
 #endif
 
 PROCESS(er_example_server, "Erbium Example Server");
-PROCESS(etimer_thread, "Etimer for led process");
-AUTOSTART_PROCESSES(&er_example_server, &etimer_thread);
+AUTOSTART_PROCESSES(&er_example_server);
 
 PROCESS_THREAD(er_example_server, ev, data)
 {
@@ -154,24 +153,6 @@ PROCESS_THREAD(er_example_server, ev, data)
     }
 #endif /* PLATFORM_HAS_BUTTON */
   }                             /* while (1) */
-
-  PROCESS_END();
-}
-
-//Event timer thread
-PROCESS_THREAD(etimer_thread, ev, data) {
-  static struct etimer timer_etimer;
-
-  PROCESS_BEGIN();
-
-  while(1) {
-    etimer_set(&timer_etimer, 0.5*CLOCK_SECOND);
-    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
-    if (red_state)
-      leds_toggle(LEDS_RED);
-    if (green_state)
-      leds_toggle(LEDS_GREEN);
-  }
 
   PROCESS_END();
 }
