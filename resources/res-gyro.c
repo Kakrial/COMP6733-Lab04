@@ -56,10 +56,10 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     //     hit_flag = 0;
     // }
 
-    while (axis) {
-        // usleep(100);
+    // while (axis) {
+    //     // usleep(100);
 
-    }
+    // }
 
     if(buff_pos > preferred_size) {
         buff_pos = preferred_size;
