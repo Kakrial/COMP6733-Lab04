@@ -44,7 +44,7 @@
 #include "rest-engine.h"
 #include "dev/leds.h"
 
-#include "shared_processes.h";
+#include "shared_processes.h"
 
 #if PLATFORM_HAS_BUTTON
 #include "dev/button-sensor.h"

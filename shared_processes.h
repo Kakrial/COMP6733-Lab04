@@ -1,4 +1,4 @@
-#include "contiki.h";
+#include "contiki.h"
 
 PROCESS_NAME(etimer_thread);
 
