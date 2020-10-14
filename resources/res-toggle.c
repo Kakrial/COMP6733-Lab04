@@ -53,7 +53,7 @@ static void res_post_handler(void *request, void *response, uint8_t *buffer, uin
 int red_state = 1;
 int green_state = 1;
 
-// PROCESS(etimer_thread, "Etimer for led process");
+PROCESS(etimer_thread, "Etimer for led process");
 // AUTOSTART_PROCESSES(&etimer_thread);
 
 /* A simple actuator example. Toggles the red led */
