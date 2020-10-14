@@ -40,7 +40,10 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     num_samples = get_url_num_samples(url);
     set_axis(url);
 
-    init_gyro(NULL);
+    // init_gyro(NULL);
+
+
+    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "Sensor Data incoming\n");
 
     // hit_flag = 1;
     // }
@@ -50,10 +53,10 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     //     hit_flag = 0;
     // }
 
-    while (axis) {
-        // usleep(100);
-        
-    }
+    // while (axis) {
+    //     // usleep(100);
+
+    // }
 
     strpos = snprintf((char *)buffer + strpos, preferred_size - strpos + 1, "%s", *gyro_buffer);
 
@@ -81,7 +84,7 @@ void send_return(int x, int y, int z) {
     } else {
         return;
     }
-    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%s axis reading: %lf degrees\n",data * 1.0) / (65536 / 500);
+    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%s axis reading: %lf degrees\n",(data * 1.0) / (65536 / 500));
 }
 
 int get_url_num_samples(char *url) {
