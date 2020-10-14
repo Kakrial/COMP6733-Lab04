@@ -80,11 +80,6 @@ red_post_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     red_state = 0;
   else 
     red_state = 1;
-  if (green_state)
-    green_state = 0;
-  else
-    green_state = 1;
-  
 }
 
 static void
