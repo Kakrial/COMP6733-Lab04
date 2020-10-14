@@ -83,7 +83,7 @@ void send_return(int x, int y, int z) {
 }
 
 int get_url_num_samples(char *url) {
-
+    return 5;
 }
 
 void set_axis(char *url) {
