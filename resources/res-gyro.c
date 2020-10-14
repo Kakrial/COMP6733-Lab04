@@ -104,6 +104,7 @@ void init_gyro(void *ptr) {
     if (!axis) return;
     counter++;
     mpu_9250_sensor.configure(SENSORS_ACTIVE, MPU_9250_SENSOR_TYPE_GYRO);
+    SENSORS_ACTIVATE(mpu_9250_sensor);
 }
 
 PROCESS_THREAD(gyro_thread, ev, data) {
