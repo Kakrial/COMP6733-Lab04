@@ -86,6 +86,7 @@ void send_return(int x, int y, int z) {
     } else {
         return;
     }
+    last_data_reading = data;
     buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%s axis reading: %lf degrees\n",(data * 1.0) / (65536 / 500));
 }
 
