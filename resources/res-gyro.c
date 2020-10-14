@@ -16,6 +16,8 @@ int num_samples = 10;
 int counter = 0;
 // int hit_flag = 0;
 
+int last_data_reading = -1;
+
 char gyro_buffer[G_BUFF_SIZE];
 int buff_pos = 0;
 
@@ -43,7 +45,7 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     init_gyro(NULL);
 
 
-    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "X axis reading: degrees\n");
+    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "X axis reading: %lf degrees\n", (last_data_reading *1.0) / (65536 / 500));
 
     // hit_flag = 1;
     // }
@@ -84,7 +86,7 @@ void send_return(int x, int y, int z) {
     } else {
         return;
     }
-    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%s axis reading: %lf degrees\n",data * 1.0) / (65536 / 500);
+    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%s axis reading: %lf degrees\n",(data * 1.0) / (65536 / 500));
 }
 
 int get_url_num_samples(char *url) {
