@@ -56,10 +56,10 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     //     hit_flag = 0;
     // }
 
-    // while (axis) {
-    //     // usleep(100);
+    while (axis) {
+        // usleep(100);
 
-    // }
+    }
 
     if(buff_pos > preferred_size) {
         buff_pos = preferred_size;
@@ -88,7 +88,7 @@ void send_return(int x, int y, int z) {
         return;
     }
     last_data_reading = data;
-    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%c = %f\n", c, (data * 1.0) / (65536 / 500));
+    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
 }
 
 int get_url_num_samples(char *url) {
