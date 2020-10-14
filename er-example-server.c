@@ -89,9 +89,6 @@ extern resource_t res_battery;
 extern resource_t res_temperature;
 #endif
 
-int red_state = 1;
-int green_state = 1;
-
 PROCESS(er_example_server, "Erbium Example Server");
 PROCESS(etimer_thread, "Etimer for led process");
 AUTOSTART_PROCESSES(&er_example_server, &etimer_thread);

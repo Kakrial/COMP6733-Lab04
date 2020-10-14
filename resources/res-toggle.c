@@ -45,13 +45,14 @@
 #include "contiki.h"
 #include "rest-engine.h"
 #include "dev/leds.h"
-#include "../er-example.c"
 
 static void res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
+int red_state = 1;
+int green_state = 1;
 
-PROCESS(etimer_thread, "Etimer for led process");
-AUTOSTART_PROCESSES(&etimer_thread);
+// PROCESS(etimer_thread, "Etimer for led process");
+// AUTOSTART_PROCESSES(&etimer_thread);
 
 /* A simple actuator example. Toggles the red led */
 RESOURCE(res_toggle,
@@ -67,4 +68,21 @@ res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
   red_state = ~red_state;
 }
 
+//Event timer thread
+PROCESS_THREAD(etimer_thread, ev, data) {
+  static struct etimer timer_etimer;
+
+  PROCESS_BEGIN();
+
+  while(1) {
+    etimer_set(&timer_etimer, 0.5*CLOCK_SECOND);
+    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_TIMER);
+    if (red_state)
+      leds_toggle(LEDS_RED);
+    if (green_state)
+      leds_toggle(LEDS_GREEN);
+  }
+
+  PROCESS_END();
+}
 #endif /* PLATFORM_HAS_LEDS */
