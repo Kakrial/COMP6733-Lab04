@@ -72,7 +72,7 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
 }
 
 void send_return(int x, int y, int z) {
-    int data = 0;
+    int data = 300;
     char c;
     if (axis == 1) {
         data = x;
@@ -95,7 +95,7 @@ int get_url_num_samples(char *url) {
 }
 
 void set_axis(char *url) {
-    axis = 1;
+    axis = 3;
 }
 
 void init_gyro(void *ptr) {
