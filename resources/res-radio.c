@@ -38,7 +38,8 @@
 
 #include "contiki.h"
 
-#if PLATFORM_HAS_RADIO
+#if 1
+// #if PLATFORM_HAS_RADIO
 
 #include <string.h>
 #include "rest-engine.h"

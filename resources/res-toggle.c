@@ -57,18 +57,43 @@ PROCESS(etimer_thread, "Etimer for led process");
 // AUTOSTART_PROCESSES(&etimer_thread);
 
 /* A simple actuator example. Toggles the red led */
-RESOURCE(res_toggle,
+RESOURCE(red_toggle,
          "title=\"Red LED\";rt=\"Control\"",
          NULL,
-         res_post_handler,
+         red_post_handler,
+         NULL,
+         NULL);
+
+/* A simple actuator example. Toggles the red led */
+RESOURCE(green_toggle,
+         "title=\"Red LED\";rt=\"Control\"",
+         NULL,
+         green_post_handler,
          NULL,
          NULL);
 
 static void
-res_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+red_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-  red_state = 0;
-	green_state = 0;
+  if (red_state)
+    red_state = 0;
+  else 
+    red_state = 1;
+  if (green_state)
+    green_state = 0;
+  else
+    green_state = 1;
+  
+}
+
+static void
+green_post_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+  if (green_state)
+    green_state = 0;
+  else
+    green_state = 1;
+  
 }
 
 //Event timer thread
