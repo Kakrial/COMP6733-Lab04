@@ -43,7 +43,7 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     init_gyro(NULL);
 
 
-    buff_pos = snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "X axis reading: degrees\n");
+    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "X axis reading: degrees\n");
 
     // hit_flag = 1;
     // }
@@ -53,10 +53,10 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     //     hit_flag = 0;
     // }
 
-    while (axis) {
-        // usleep(100);
+    // while (axis) {
+    //     // usleep(100);
 
-    }
+    // }
 
     if(buff_pos > preferred_size) {
         buff_pos = preferred_size;
@@ -65,6 +65,7 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
 
     // REST.set_response_payload(response, buffer, strpos);
     REST.set_response_payload(response, gyro_buffer, buff_pos);
+    buff_pos = 0;
     
 }
 
