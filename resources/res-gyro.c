@@ -43,7 +43,7 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     // init_gyro(NULL);
 
 
-    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "Sensor Data incoming\n");
+    buff_pos = snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "Sensor Data incoming\n");
 
     // hit_flag = 1;
     // }
@@ -65,7 +65,9 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
         /* Truncate if above CHUNKS_TOTAL bytes. */
     }
 
-    REST.set_response_payload(response, buffer, strpos);
+    const char* message = "Sensor Data incoming\n";
+
+    REST.set_response_payload(response, message, strlen(message));
     
 }
 
