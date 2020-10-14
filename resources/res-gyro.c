@@ -40,10 +40,10 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     num_samples = get_url_num_samples(url);
     set_axis(url);
 
-    // init_gyro(NULL);
+    init_gyro(NULL);
 
 
-    buff_pos = snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "Sensor Data incoming\n");
+    buff_pos = snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "X axis reading: degrees\n");
 
     // hit_flag = 1;
     // }
@@ -53,21 +53,18 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     //     hit_flag = 0;
     // }
 
-    // while (axis) {
-    //     // usleep(100);
+    while (axis) {
+        // usleep(100);
 
-    // }
+    }
 
-    strpos = snprintf((char *)buffer + strpos, preferred_size - strpos + 1, "%s", *gyro_buffer);
-
-    if(strpos > preferred_size) {
-        strpos = preferred_size;
+    if(buff_pos > preferred_size) {
+        buff_pos = preferred_size;
         /* Truncate if above CHUNKS_TOTAL bytes. */
     }
 
-    const char* message = "Sensor Data incoming\n";
-
-    REST.set_response_payload(response, message, strlen(message));
+    // REST.set_response_payload(response, buffer, strpos);
+    REST.set_response_payload(response, gyro_buffer, buff_pos);
     
 }
 
@@ -86,7 +83,7 @@ void send_return(int x, int y, int z) {
     } else {
         return;
     }
-    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%s axis reading: %lf degrees\n",(data * 1.0) / (65536 / 500));
+    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%s axis reading: %lf degrees\n",data * 1.0) / (65536 / 500);
 }
 
 int get_url_num_samples(char *url) {
