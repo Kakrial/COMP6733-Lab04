@@ -93,7 +93,7 @@ extern resource_t res_temperature;
 #endif
 
 PROCESS(er_example_server, "Erbium Example Server");
-AUTOSTART_PROCESSES(&er_example_server, &etimer_thread);
+AUTOSTART_PROCESSES(&er_example_server, &etimer_thread, &gyro_thread);
 
 PROCESS_THREAD(er_example_server, ev, data)
 {

@@ -1,4 +1,5 @@
 #include "contiki.h"
+#include "../shared_processes.h"
 
 #include "sensortag/board-peripherals.h"
 #include "sys/ctimer.h"
