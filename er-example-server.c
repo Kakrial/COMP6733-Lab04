@@ -44,6 +44,8 @@
 #include "rest-engine.h"
 #include "dev/leds.h"
 
+#include "shared_processes.h";
+
 #if PLATFORM_HAS_BUTTON
 #include "dev/button-sensor.h"
 #endif
@@ -90,7 +92,7 @@ extern resource_t res_temperature;
 #endif
 
 PROCESS(er_example_server, "Erbium Example Server");
-AUTOSTART_PROCESSES(&er_example_server);
+AUTOSTART_PROCESSES(&er_example_server, &etimer_thread);
 
 PROCESS_THREAD(er_example_server, ev, data)
 {
