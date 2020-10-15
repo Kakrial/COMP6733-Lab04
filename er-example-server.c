@@ -125,7 +125,9 @@ PROCESS_THREAD(er_example_server, ev, data)
    */
   rest_activate_resource(&res_hello, "test/hello");
   rest_activate_resource(&res_push, "test/push");
-  rest_activate_resource(&res_gyro, "sensor/mpu/gyro/x/*");
+  rest_activate_resource(&res_gyro, "sensor/mpu/gyro/x");
+  rest_activate_resource(&res_sub, "test/sub/");
+  rest_activate_resource(&res_chunks, "test/chunks");
 #if PLATFORM_HAS_LEDS
   rest_activate_resource(&red_toggle, "led/red/toggle");
   rest_activate_resource(&green_toggle, "led/green/toggle");
