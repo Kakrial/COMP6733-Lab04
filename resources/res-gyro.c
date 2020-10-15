@@ -25,7 +25,7 @@ int buff_pos = 0;
 static void gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 void init_gyro(void *);
 
-RESOURCE(res_gyro,
+PARENT_RESOURCE(res_gyro,
         "title=\"Gyro Data\";rt=\"Data\"",
         gyro_get_handler,
         NULL,
