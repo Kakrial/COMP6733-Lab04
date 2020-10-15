@@ -7,6 +7,7 @@
 // #include <unistd.h>
 
 #define G_BUFF_SIZE 1000
+#define CHUNKS_TOTAL 2050
 
 PROCESS(gyro_thread, "Gyro sensor processing thread");
 
@@ -20,7 +21,12 @@ int counter = 0;
 int last_data_reading = -1;
 
 char gyro_buffer[G_BUFF_SIZE];
-int buff_pos = 0;
+
+int32_t *r_offset;
+
+uint8_t *r_buffer;
+
+int32_t strpos;
 
 static void gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 void init_gyro(void *);
@@ -36,7 +42,10 @@ static void
 gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
 
-    int32_t strpos = 0;
+    strpos = 0;
+    r_offset = offset;
+    r_buffer = buffer;
+
     // if (!hit_flag) {
     char *url;
     REST.get_url(request, &url);
@@ -61,15 +70,22 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
 
     // }
 
-    if(buff_pos > preferred_size) {
-        buff_pos = preferred_size;
+    if(strpos > preferred_size) {
+        strpos = preferred_size;
         /* Truncate if above CHUNKS_TOTAL bytes. */
     }
+    if(*offset + (int32_t)strpos > CHUNKS_TOTAL) {
+        strpos = CHUNKS_TOTAL - *offset;
+    }
+    REST.set_response_payload(response, buffer, strpos);
+
+    /* IMPORTANT for chunk-wise resources: Signal chunk awareness to REST engine. */
+    *offset += strpos;
 
     // REST.set_response_payload(response, buffer, strpos);
-    REST.set_response_payload(response, gyro_buffer, buff_pos);
-    buff_pos = 0;
-    
+    REST.set_response_payload(response, gyro_buffer, strpos);
+    strpos = 0;
+        
 }
 
 void send_return(int x, int y, int z) {
@@ -88,7 +104,10 @@ void send_return(int x, int y, int z) {
         return;
     }
     last_data_reading = data;
-    buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
+    strpos += snprintf((char *)gyro_buffer + strpos, CHUNKS_TOTAL - strpos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
+    if (counter == num_samples) {
+        r_offset = -1;
+    }
 }
 
 int get_url_num_samples(char *url) {
