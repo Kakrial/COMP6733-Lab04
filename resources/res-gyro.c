@@ -26,7 +26,7 @@ int32_t *r_offset;
 
 uint8_t *r_buffer;
 
-int32_t str_pos;
+int32_t strpos;
 
 static void gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 void init_gyro(void *);
@@ -42,7 +42,7 @@ static void
 gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
 
-    // strpos = 0;
+    strpos = 0;
     r_offset = offset;
     r_buffer = buffer;
 
@@ -54,7 +54,7 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
 
     init_gyro(NULL);
 
-    int32_t strpos = 0;
+    // int32_t strpos = 0;
 
     /* Check the offset for boundaries of the resource data. */
     if(*offset >= CHUNKS_TOTAL) {
@@ -107,7 +107,7 @@ void send_return(int x, int y, int z) {
         return;
     }
     last_data_reading = data;
-    str_pos += snprintf((char *)gyro_buffer + str_pos, CHUNKS_TOTAL - str_pos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
+    strpos += snprintf((char *)gyro_buffer + strpos, CHUNKS_TOTAL - strpos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
     if (counter == num_samples) {
         *r_offset = -1;
     }
