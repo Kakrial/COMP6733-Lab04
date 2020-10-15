@@ -26,7 +26,7 @@ int32_t *r_offset;
 
 uint8_t *r_buffer;
 
-int32_t strpos;
+int32_t str_pos;
 
 static void gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 void init_gyro(void *);
@@ -42,7 +42,7 @@ static void
 gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
 
-    strpos = 0;
+    // strpos = 0;
     r_offset = offset;
     r_buffer = buffer;
 
@@ -54,22 +54,24 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
 
     init_gyro(NULL);
 
+    int32_t strpos = 0;
 
-    // buff_pos += snprintf((char *)gyro_buffer + buff_pos, G_BUFF_SIZE - buff_pos, "X axis reading = (%d) degrees %f, %d\n", (int)(last_data_reading *1.0) / (65536 / 500), 1.60, 4);
+    /* Check the offset for boundaries of the resource data. */
+    if(*offset >= CHUNKS_TOTAL) {
+        REST.set_response_status(response, REST.status.BAD_OPTION);
+        /* A block error message should not exceed the minimum block size (16). */
 
-    // hit_flag = 1;
-    // }
-    // REST.set_response_payload();
-    // // Last iteration
-    // if (!axis) {
-    //     hit_flag = 0;
-    // }
+        const char *error_msg = "BlockOutOfScope";
+        REST.set_response_payload(response, error_msg, strlen(error_msg));
+        return;
+    }
 
-    // while (axis) {
-    //     // usleep(100);
+    /* Generate data until reaching CHUNKS_TOTAL. */
+    while(strpos < preferred_size) {
+        strpos += snprintf((char *)buffer + strpos, preferred_size - strpos + 1, "|%d|", preferred_size);
+    }
 
-    // }
-
+    /* snprintf() does not adjust return value if truncated by size. */
     if(strpos > preferred_size) {
         strpos = preferred_size;
         /* Truncate if above CHUNKS_TOTAL bytes. */
@@ -77,14 +79,15 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     if(*offset + (int32_t)strpos > CHUNKS_TOTAL) {
         strpos = CHUNKS_TOTAL - *offset;
     }
-    // REST.set_response_payload(response, buffer, strpos);
+    REST.set_response_payload(response, buffer, strpos);
 
     /* IMPORTANT for chunk-wise resources: Signal chunk awareness to REST engine. */
-
-    // REST.set_response_payload(response, buffer, strpos);
-    REST.set_response_payload(response, gyro_buffer, strpos);
-
     *offset += strpos;
+
+    /* Signal end of resource representation. */
+    if(*offset >= CHUNKS_TOTAL) {
+        *offset = -1;
+    }
         
 }
 
@@ -104,10 +107,9 @@ void send_return(int x, int y, int z) {
         return;
     }
     last_data_reading = data;
-    strpos += snprintf((char *)gyro_buffer + strpos, CHUNKS_TOTAL - strpos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
+    str_pos += snprintf((char *)gyro_buffer + str_pos, CHUNKS_TOTAL - str_pos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
     if (counter == num_samples) {
         *r_offset = -1;
-        strpos = 0;
     }
 }
 
