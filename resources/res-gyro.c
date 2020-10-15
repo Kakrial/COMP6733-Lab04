@@ -77,14 +77,14 @@ gyro_get_handler(void *request, void *response, uint8_t *buffer, uint16_t prefer
     if(*offset + (int32_t)strpos > CHUNKS_TOTAL) {
         strpos = CHUNKS_TOTAL - *offset;
     }
-    REST.set_response_payload(response, buffer, strpos);
+    // REST.set_response_payload(response, buffer, strpos);
 
     /* IMPORTANT for chunk-wise resources: Signal chunk awareness to REST engine. */
-    *offset += strpos;
 
     // REST.set_response_payload(response, buffer, strpos);
     REST.set_response_payload(response, gyro_buffer, strpos);
-    strpos = 0;
+
+    *offset += strpos;
         
 }
 
@@ -106,7 +106,8 @@ void send_return(int x, int y, int z) {
     last_data_reading = data;
     strpos += snprintf((char *)gyro_buffer + strpos, CHUNKS_TOTAL - strpos, "%c = %d\n", c, (int)(data * 1.0) / (65536 / 500));
     if (counter == num_samples) {
-        r_offset = -1;
+        *r_offset = -1;
+        strpos = 0;
     }
 }
 
