@@ -2,6 +2,11 @@
 !Makefile
 !*.c
 !.gitignore
-!resources
-!resources/*.c
+!code
+!code/*
+!code/resources
+!code/resources/*.c
+!section-1
+!section-1/*
+
 !*.h
